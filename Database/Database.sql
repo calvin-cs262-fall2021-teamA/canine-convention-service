@@ -2,18 +2,18 @@
 DROP TABLE IF EXISTS DogActivity;
 DROP TABLE IF EXISTS Activity;
 DROP TABLE IF EXISTS Dog;
-DROP TABLE IF EXISTS DogOwner;
+DROP TABLE IF EXISTS Person;
 
 -- Create the schema.
-CREATE TABLE DogOwner (
+CREATE TABLE Person (
 	ID integer PRIMARY KEY, 
-	emailAddress varchar(50) NOT NULL,
-	passwords varchar(50) NOT NULL,
-	Phone_number varchar(50) NOT NULL
+	email varchar(50) NOT NULL,
+	phone varchar(50) NOT NULL
 	);
 
 CREATE TABLE Dog (
 	ID integer PRIMARY KEY, 
+	personID integer REFERENCES Person(ID)
 	name varchar(50) NOT NULL,
 	Birthdate date NOT NULL,
 	Breed varchar(50) NOT NULL,
@@ -27,7 +27,6 @@ CREATE TABLE Activity (
 	location varchar(50) NOT NULL,
 	EventTime timestamp with time zone NOT NULL,
 	Age integer NOT NULL,
-	Breed varchar(50) NOT NULL,
 	Personality varchar(50) NOT NULL,
 	Gender varchar(50) NOT NULL,
 	Neutered boolean NOT NULL
@@ -39,7 +38,7 @@ CREATE TABLE DogActivity (
 );
 
 -- Allow users to select data from the tables.
-GRANT SELECT ON DogOwner TO PUBLIC;
+GRANT SELECT ON Person TO PUBLIC;
 GRANT SELECT ON Dog TO PUBLIC;
 GRANT SELECT ON Activity TO PUBLIC;
 GRANT SELECT ON DogActivity TO PUBLIC;
