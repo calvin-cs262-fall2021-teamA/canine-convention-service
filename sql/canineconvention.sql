@@ -6,7 +6,9 @@ DROP TABLE IF EXISTS Person;
 
 -- Create the schema.
 CREATE TABLE Person (
-	ID integer PRIMARY KEY, 
+	ID integer PRIMARY KEY,
+	firstName varchar(50),
+	lastName varchar(50), 
 	email varchar(50) NOT NULL,
 	phone varchar(50) NOT NULL
 	);
