@@ -13,10 +13,9 @@ CREATE TABLE Person (
 
 CREATE TABLE Dog (
 	ID integer PRIMARY KEY, 
-	personID integer REFERENCES Person(ID)
-	name varchar(50) NOT NULL,
+	personID integer REFERENCES Person(ID),
+	dogName varchar(50) NOT NULL,
 	Birthdate date NOT NULL,
-	Breed varchar(50) NOT NULL,
 	Personality varchar(50) NOT NULL,
 	Gender varchar(50) NOT NULL,
 	Neutered boolean NOT NULL
@@ -42,6 +41,3 @@ GRANT SELECT ON Person TO PUBLIC;
 GRANT SELECT ON Dog TO PUBLIC;
 GRANT SELECT ON Activity TO PUBLIC;
 GRANT SELECT ON DogActivity TO PUBLIC;
-
-
-
