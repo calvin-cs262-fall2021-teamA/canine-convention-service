@@ -39,19 +39,29 @@ router.use(express.json());
 // Routes for SQL calls
 router.get("/", readHelloMessage);
 
-// Person routes
-router.get("/persons", readPersons);
-router.get("/persons/:id", readPerson);
-router.put("/persons/:id", updatePerson);
-router.post('/persons', createPerson);
-router.delete('/persons/:id', deletePerson);
+/* Sample Routes
 
-// Dog routes
-router.get("/dogs", readDogs);
-router.get("/dogs/:id", readDog);
-router.put("/dogs/:id", updateDog);
-router.post('/dogs', createDog);
+router.delete('/persons/:id', deletePerson);
 router.delete('/dogs/:id', deleteDog);
+
+*/
+
+//Profile routes
+router.post('/persons', createPerson);
+router.get("/person/:id", readPerson);
+router.get("/person/:id/dogs", readPersonDogs);
+router.put("/persons/name/:id", updatePersonFirstName);
+router.put("/persons/surname/:id", updatePersonLastName);
+router.put("/persons/email/:id", updatePersonEmail);
+router.put("/persons/phone/:id", updatePersonPhone);
+router.get("/dog/:id", readDog);
+router.post('/dog', createDog);
+router.put("/dog/name/:id", updateDogName);
+router.put("/dog/birthdate/:id", updateDogBirthdate);
+router.put("/dog/personality/:id", updateDogPersonality);
+router.put("/dog/gender/:id", updateDogGender);
+router.put("/dog/neutered/:id", updateDogNeutered);
+
 
 app.use(router);
 app.use(errorHandler);
@@ -78,47 +88,7 @@ function readHelloMessage(req, res) {
     res.send('Canine Convention coming through!');
 }
 
-// Person functions
-function readPersons(req, res, next) {
-    db.many("SELECT * FROM Person")
-        .then(data => {
-            res.send(data);
-        })
-        .catch(err => {
-            next(err);
-        })
-}
-
-function readPerson(req, res, next) {
-    db.oneOrNone('SELECT * FROM Person WHERE id=${id}', req.params)
-        .then(data => {
-            returnDataOr404(res, data);
-        })
-        .catch(err => {
-            next(err);
-        });
-}
-
-function updatePerson(req, res, next) {
-    db.oneOrNone('UPDATE Person SET email=${body.email}, phone=${body.phone} WHERE id=${params.id} RETURNING id', req)
-        .then(data => {
-            returnDataOr404(res, data);
-        })
-        .catch(err => {
-            next(err);
-        });
-}
-
-function createPerson(req, res, next) {
-    db.one('INSERT INTO Person(email, phone) VALUES (${email}, ${phone}) RETURNING id', req.body)
-        .then(data => {
-            res.send(data);
-        })
-        .catch(err => {
-            next(err);
-        });
-}
-
+/*
 function deletePerson(req, res, next) {
     db.oneOrNone('DELETE FROM Person WHERE id=${id} RETURNING id', req.params)
         .then(data => {
@@ -131,48 +101,163 @@ function deletePerson(req, res, next) {
 
 
 // Dog functions
-function readDogs(req, res, next) {
-    db.many("SELECT * FROM Dog")
-        .then(data => {
-            res.send(data);
-        })
-        .catch(err => {
-            next(err);
-        })
-}
-
-function readDog(req, res, next) {
-    db.oneOrNone('SELECT * FROM Dog WHERE id=${id}', req.params)
-        .then(data => {
-            returnDataOr404(res, data);
-        })
-        .catch(err => {
-            next(err);
-        });
-}
-
-function updateDog(req, res, next) {
-    db.oneOrNone('UPDATE Dog SET name=${body.name} WHERE id=${params.id} RETURNING id', req)
-        .then(data => {
-            returnDataOr404(res, data);
-        })
-        .catch(err => {
-            next(err);
-        });
-}
-
-function createDog(req, res, next) {
-    db.one('INSERT INTO Dog(name, personID) VALUES (${name}, ${personID}) RETURNING id', req.body)
-        .then(data => {
-            res.send(data);
-        })
-        .catch(err => {
-            next(err);
-        });
-}
-
 function deleteDog(req, res, next) {
     db.oneOrNone('DELETE FROM Dog WHERE id=${id} RETURNING id', req.params)
+        .then(data => {
+            returnDataOr404(res, data);
+        })
+        .catch(err => {
+            next(err);
+        });
+}
+*/
+
+// Create new person
+function createPerson(req, res, next) {
+    db.one('INSERT INTO Person(firstName, lastName, email, phone) VALUES (${firstName}, ${lastName}, ${email}, ${phone}) RETURNING id', req.body)
+        .then(data => {
+            res.send(data);
+        })
+        .catch(err => {
+            next(err);
+        });
+}
+
+// Read individual person info
+function readPerson(req, res, next) {
+    db.oneOrNone('SELECT * FROM Person WHERE id=${id}', req.params)
+        .then(data => {
+            returnDataOr404(res, data);
+        })
+        .catch(err => {
+            next(err);
+        });
+}
+
+// Read person's dogs
+function readPersonDogs(req, res, next) {
+    db.many('SELECT * FROM Dog WHERE personID=${id}', req.params)
+        .then(data => {
+            returnDataOr404(res, data);
+        })
+        .catch(err => {
+            next(err);
+        });
+}
+
+// Read individual dog info
+function readDog(req, res, next) {
+    db.oneOrNone('SELECT * FROM Dog WHERE ID=${id}', req.params)
+        .then(data => {
+            returnDataOr404(res, data);
+        })
+        .catch(err => {
+            next(err);
+        });
+}
+
+// Update person firstName
+function updatePersonFirstName(req, res, next) {
+    db.oneOrNone('UPDATE Person SET firstName=${body.firstName} WHERE id=${params.id} RETURNING id', req)
+        .then(data => {
+            returnDataOr404(res, data);
+        })
+        .catch(err => {
+            next(err);
+        });
+}
+
+// Update person lastName
+function updatePersonLastName(req, res, next) {
+    db.oneOrNone('UPDATE Person SET lastName=${body.lastName} WHERE id=${params.id} RETURNING id', req)
+        .then(data => {
+            returnDataOr404(res, data);
+        })
+        .catch(err => {
+            next(err);
+        });
+}
+
+// Update person email
+function updatePersonEmail(req, res, next) {
+    db.oneOrNone('UPDATE Person SET email=${body.email} WHERE id=${params.id} RETURNING id', req)
+        .then(data => {
+            returnDataOr404(res, data);
+        })
+        .catch(err => {
+            next(err);
+        });
+}
+
+// Update person phone number
+function updatePersonPhone(req, res, next) {
+    db.oneOrNone('UPDATE Person SET phone=${body.phone} WHERE id=${params.id} RETURNING id', req)
+        .then(data => {
+            returnDataOr404(res, data);
+        })
+        .catch(err => {
+            next(err);
+        });
+}
+
+// Create Dog
+function createDog(req, res, next) {
+    db.one('INSERT INTO Dog(personID, dogName, Birthdate, Personality, Gender, Neutered) VALUES (${personID}, ${dogName}, ${Birthdate}, ${Personality}, ${Gender}, ${Neutered}) RETURNING id', req.body)
+        .then(data => {
+            res.send(data);
+        })
+        .catch(err => {
+            next(err);
+        });
+}
+
+// Update dog name
+function updateDogName(req, res, next) {
+    db.oneOrNone('UPDATE Dog SET dogName=${body.dogName} WHERE id=${params.id} RETURNING id', req)
+        .then(data => {
+            returnDataOr404(res, data);
+        })
+        .catch(err => {
+            next(err);
+        });
+}
+
+// Update dog birthday
+function updateDogBirthdate(req, res, next) {
+    db.oneOrNone('UPDATE Dog SET Birthdate=${body.Birthdate} WHERE id=${params.id} RETURNING id', req)
+        .then(data => {
+            returnDataOr404(res, data);
+        })
+        .catch(err => {
+            next(err);
+        });
+}
+
+// Update dog personality
+function updateDogPersonality(req, res, next) {
+    db.oneOrNone('UPDATE Dog SET Personality=${body.Personality} WHERE id=${params.id} RETURNING id', req)
+        .then(data => {
+            returnDataOr404(res, data);
+        })
+        .catch(err => {
+            next(err);
+        });
+}
+
+// Update dog gender
+function updateDogGender(req, res, next) {
+    db.oneOrNone('UPDATE Dog SET Gender=${body.Gender} WHERE id=${params.id} RETURNING id', req)
+        .then(data => {
+            returnDataOr404(res, data);
+        })
+        .catch(err => {
+            next(err);
+        });
+}
+
+// Update dog neutered status
+function updateDogNeutered(req, res, next) {
+    db.oneOrNone('UPDATE Dog SET Neutered=${body.Neutered} WHERE id=${params.id} RETURNING id', req)
         .then(data => {
             returnDataOr404(res, data);
         })
