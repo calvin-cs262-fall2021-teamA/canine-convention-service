@@ -26,11 +26,12 @@ CREATE TABLE Dog (
 CREATE TABLE Activity (
 	ID integer PRIMARY KEY,
 	location varchar(50) NOT NULL,
-	EventTime timestamp with time zone NOT NULL,
-	Age integer NOT NULL,
-	Personality varchar(50) NOT NULL,
-	Gender varchar(50) NOT NULL,
-	Neutered boolean NOT NULL
+	EventTime timestamp with time zone,
+	Age integer,
+	Personality varchar(50),
+	Gender varchar(50),
+	Neutered boolean,
+	Attendees integer DEFAULT 1 NOT NULL,
 	);
 
 CREATE TABLE DogActivity (
