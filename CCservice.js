@@ -46,7 +46,7 @@ router.delete('/dogs/:id', deleteDog);
 
 */
 
-//Profile routes
+// Profile routes
 router.post("/persons", createPerson);
 router.get("/person/:id", readPerson);
 router.get("/person/:id/dogs", readPersonDogs);
@@ -61,6 +61,13 @@ router.put("/dog/birthdate/:id", updateDogBirthdate);
 router.put("/dog/personality/:id", updateDogPersonality);
 router.put("/dog/gender/:id", updateDogGender);
 router.put("/dog/neutered/:id", updateDogNeutered);
+
+// Event finding routes
+router.post("/event", createEvent);
+router.get("/events", readEvents);
+router.put("/event/:id", updateEvent);
+router.post("/event/join/:id", joinEvent);
+
 
 app.use(router);
 app.use(errorHandler);
@@ -86,30 +93,6 @@ function returnDataOr404(res, data) {
 function readHelloMessage(req, res) {
   res.send("Canine Convention coming through!");
 }
-
-/*
-function deletePerson(req, res, next) {
-    db.oneOrNone('DELETE FROM Person WHERE id=${id} RETURNING id', req.params)
-        .then(data => {
-            returnDataOr404(res, data);
-        })
-        .catch(err => {
-            next(err);
-        });
-}
-
-
-// Dog functions
-function deleteDog(req, res, next) {
-    db.oneOrNone('DELETE FROM Dog WHERE id=${id} RETURNING id', req.params)
-        .then(data => {
-            returnDataOr404(res, data);
-        })
-        .catch(err => {
-            next(err);
-        });
-}
-*/
 
 // Create new person
 function createPerson(req, res, next) {
@@ -289,6 +272,59 @@ function updateDogNeutered(req, res, next) {
   db.oneOrNone(
     "UPDATE Dog SET Neutered=${body.Neutered} WHERE id=${params.id} RETURNING id",
     req
+  )
+    .then((data) => {
+      returnDataOr404(res, data);
+    })
+    .catch((err) => {
+      next(err);
+    });
+}
+
+// Find Events
+function readEvents(req, res, next) {
+  db.many("SELECT id FROM Activity WHERE Attendees < 2", req.params)
+    .then((data) => {
+      returnDataOr404(res, data);
+    })
+    .catch((err) => {
+      next(err);
+    });
+}
+
+// Create Event
+function createEvent(req, res, next) {
+  db.one(
+    "INSERT INTO Activity(location) VALUES (${location}) RETURNING id",
+    req.body
+  )
+    .then((data) => {
+      res.send(data);
+    })
+    .catch((err) => {
+      next(err);
+    });
+}
+
+// Update Event
+function updateEvent(req, res, next) {
+  db.oneOrNone(
+    "UPDATE Activity SET Attendees = Attendees + 1 WHERE id=${params.id} RETURNING id",
+    req
+  )
+    .then((data) => {
+      returnDataOr404(res, data);
+    })
+    .catch((err) => {
+      next(err);
+    });
+}
+
+// Join Event
+function joinEvent(req, res, next) {
+  db.oneOrNone(
+    "INSERT INTO DogActivity VALUES (${dogID}, ${activityID} ) RETURNING id",
+    req.body
   )
     .then((data) => {
       returnDataOr404(res, data);
