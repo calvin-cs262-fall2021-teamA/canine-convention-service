@@ -44,3 +44,5 @@ GRANT SELECT ON Person TO PUBLIC;
 GRANT SELECT ON Dog TO PUBLIC;
 GRANT SELECT ON Activity TO PUBLIC;
 GRANT SELECT ON DogActivity TO PUBLIC;
+
+INSERT INTO Person(firstName, lastName, email, phone) VALUES ("John", "Doe", "johndoe@gmail.com", 1111111111);
