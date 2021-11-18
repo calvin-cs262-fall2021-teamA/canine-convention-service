@@ -38,6 +38,7 @@ router.use(express.json());
 
 // Routes for SQL calls
 router.get("/", readHelloMessage);
+router.get("/allPersons", readPersons);
 
 /* Sample Routes
 
@@ -92,6 +93,16 @@ function returnDataOr404(res, data) {
 
 function readHelloMessage(req, res) {
   res.send("Canine Convention coming through!");
+}
+
+function readPersons(req, res, next) {
+    db.many("SELECT * FROM Person")
+        .then(data => {
+            res.send(data);
+        })
+        .catch(err => {
+            next(err);
+        })
 }
 
 // Create new person
