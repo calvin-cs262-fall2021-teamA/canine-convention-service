@@ -6,7 +6,7 @@ DROP TABLE IF EXISTS Person;
 
 -- Create the schema.
 CREATE TABLE Person (
-	ID integer PRIMARY KEY,
+	ID SERIAL PRIMARY KEY,
 	firstName varchar(50),
 	lastName varchar(50), 
 	email varchar(50) NOT NULL,
@@ -14,7 +14,7 @@ CREATE TABLE Person (
 	);
 
 CREATE TABLE Dog (
-	ID integer PRIMARY KEY, 
+	ID SERIAL PRIMARY KEY, 
 	personID integer REFERENCES Person(ID),
 	dogName varchar(50) NOT NULL,
 	Birthdate date NOT NULL,
@@ -24,7 +24,7 @@ CREATE TABLE Dog (
 	);
 
 CREATE TABLE Activity (
-	ID integer PRIMARY KEY,
+	ID SERIAL PRIMARY KEY,
 	location varchar(50) NOT NULL,
 	EventTime timestamp with time zone,
 	Age integer,
@@ -44,5 +44,3 @@ GRANT SELECT ON Person TO PUBLIC;
 GRANT SELECT ON Dog TO PUBLIC;
 GRANT SELECT ON Activity TO PUBLIC;
 GRANT SELECT ON DogActivity TO PUBLIC;
-
-INSERT INTO Person(firstName, lastName, email, phone) VALUES ("John", "Doe", "johndoe@gmail.com", 1111111111);
