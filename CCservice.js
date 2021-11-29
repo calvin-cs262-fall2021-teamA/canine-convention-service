@@ -64,6 +64,7 @@ router.put("/dog/personality/:id", updateDogPersonality);
 router.put("/dog/gender/:id", updateDogGender);
 router.put("/dog/neutered/:id", updateDogNeutered);
 router.put("/dog/image/:id", updateDogImage);
+router.put("/dog/size/:id", updateDogSize);
 
 // Event finding routes
 router.post("/event", createEvent);
@@ -227,7 +228,7 @@ function updatePersonImage(req, res, next) {
 // Create Dog
 function createDog(req, res, next) {
   db.one(
-    "INSERT INTO Dog(personID, dogName, Birthdate, Personality, Gender, Neutered, image) VALUES (${personID}, ${dogName}, ${Birthdate}, ${Personality}, ${Gender}, ${Neutered}, ${image}) RETURNING id",
+    "INSERT INTO Dog(personID, dogName, Birthdate, Personality, Gender, Neutered, Size, image) VALUES (${personID}, ${dogName}, ${Birthdate}, ${Personality}, ${Gender}, ${Neutered}, ${Size}, ${image}) RETURNING id",
     req.body
   )
     .then((data) => {
@@ -312,6 +313,21 @@ function updateDogNeutered(req, res, next) {
 function updateDogImage(req, res, next) {
   db.oneOrNone(
     "UPDATE Dog SET image=${body.image} WHERE id=${params.id} RETURNING id",
+    req
+  )
+    .then((data) => {
+      returnDataOr404(res, data);
+    })
+    .catch((err) => {
+      next(err);
+    });
+}
+
+
+// Update dog size
+function updateDogSize(req, res, next) {
+  db.oneOrNone(
+    "UPDATE Dog SET Size=${body.Size} WHERE id=${params.id} RETURNING id",
     req
   )
     .then((data) => {
