@@ -55,6 +55,7 @@ router.put("/persons/name/:id", updatePersonFirstName);
 router.put("/persons/surname/:id", updatePersonLastName);
 router.put("/persons/email/:id", updatePersonEmail);
 router.put("/persons/phone/:id", updatePersonPhone);
+router.put("/persons/image/:id", updatePersonImage);
 router.get("/dog/:id", readDog);
 router.post("/dog", createDog);
 router.put("/dog/name/:id", updateDogName);
@@ -62,6 +63,7 @@ router.put("/dog/birthdate/:id", updateDogBirthdate);
 router.put("/dog/personality/:id", updateDogPersonality);
 router.put("/dog/gender/:id", updateDogGender);
 router.put("/dog/neutered/:id", updateDogNeutered);
+router.put("/dog/image/:id", updateDogImage);
 
 // Event finding routes
 router.post("/event", createEvent);
@@ -208,10 +210,24 @@ function updatePersonPhone(req, res, next) {
     });
 }
 
+// Update person image
+function updatePersonImage(req, res, next) {
+  db.oneOrNone(
+    "UPDATE Person SET image=${body.image} WHERE id=${params.id} RETURNING id",
+    req
+  )
+    .then((data) => {
+      returnDataOr404(res, data);
+    })
+    .catch((err) => {
+      next(err);
+    });
+}
+
 // Create Dog
 function createDog(req, res, next) {
   db.one(
-    "INSERT INTO Dog(personID, dogName, Birthdate, Personality, Gender, Neutered) VALUES (${personID}, ${dogName}, ${Birthdate}, ${Personality}, ${Gender}, ${Neutered}) RETURNING id",
+    "INSERT INTO Dog(personID, dogName, Birthdate, Personality, Gender, Neutered, image) VALUES (${personID}, ${dogName}, ${Birthdate}, ${Personality}, ${Gender}, ${Neutered}, ${image}) RETURNING id",
     req.body
   )
     .then((data) => {
@@ -282,6 +298,20 @@ function updateDogGender(req, res, next) {
 function updateDogNeutered(req, res, next) {
   db.oneOrNone(
     "UPDATE Dog SET Neutered=${body.Neutered} WHERE id=${params.id} RETURNING id",
+    req
+  )
+    .then((data) => {
+      returnDataOr404(res, data);
+    })
+    .catch((err) => {
+      next(err);
+    });
+}
+
+// Update dog image
+function updateDogImage(req, res, next) {
+  db.oneOrNone(
+    "UPDATE Dog SET image=${body.image} WHERE id=${params.id} RETURNING id",
     req
   )
     .then((data) => {
