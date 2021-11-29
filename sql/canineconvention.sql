@@ -22,6 +22,7 @@ CREATE TABLE Dog (
 	Personality varchar(50) NOT NULL,
 	Gender varchar(50) NOT NULL,
 	Neutered boolean NOT NULL,
+	Size varchar(10) NOT NULL,
 	image varchar(250)
 	);
 
