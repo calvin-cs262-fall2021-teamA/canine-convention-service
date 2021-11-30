@@ -43,7 +43,6 @@ router.get("/allPersons", readPersons);
 /* Sample Routes
 
 router.delete('/persons/:id', deletePerson);
-router.delete('/dogs/:id', deleteDog);
 
 */
 
@@ -58,6 +57,7 @@ router.put("/persons/phone/:id", updatePersonPhone);
 router.put("/persons/image/:id", updatePersonImage);
 router.get("/dog/:id", readDog);
 router.post("/dog", createDog);
+router.delete("/dog/:id", deleteDog);
 router.put("/dog/name/:id", updateDogName);
 router.put("/dog/birthdate/:id", updateDogBirthdate);
 router.put("/dog/personality/:id", updateDogPersonality);
@@ -237,6 +237,17 @@ function createDog(req, res, next) {
     .catch((err) => {
       next(err);
     });
+}
+
+// Delete dog
+function deleteDog(req, res, next) {
+    db.oneOrNone('DELETE FROM Dog WHERE id=${id} RETURNING id', req.params)
+        .then(data => {
+            returnDataOr404(res, data);
+        })
+        .catch(err => {
+            next(err);
+        });
 }
 
 // Update dog name
