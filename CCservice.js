@@ -363,7 +363,7 @@ function readEvents(req, res, next) {
 // Create Event
 function createEvent(req, res, next) {
   db.one(
-    "INSERT INTO Activity(location) VALUES (${location}) RETURNING id",
+    "INSERT INTO Activity(long, lat) VALUES (${long}, ${lat}) RETURNING id",
     req.body
   )
     .then((data) => {

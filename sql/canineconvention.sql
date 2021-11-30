@@ -28,7 +28,8 @@ CREATE TABLE Dog (
 
 CREATE TABLE Activity (
 	ID SERIAL PRIMARY KEY,
-	location varchar(50) NOT NULL,
+	long varchar(50) NOT NULL,
+	lat varchar(50) NOT NULL,
 	EventTime timestamp with time zone,
 	Age integer,
 	Personality varchar(50),
