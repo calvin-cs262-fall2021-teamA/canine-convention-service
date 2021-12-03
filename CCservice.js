@@ -71,6 +71,7 @@ router.post("/event", createEvent);
 router.get("/events", readEvents);
 router.put("/event/:id", updateEvent);
 router.post("/event/join/:id", joinEvent);
+router.delete("/event/:id", deleteEvent);
 
 
 app.use(router);
@@ -351,7 +352,7 @@ function updateDogSize(req, res, next) {
 
 // Find Events
 function readEvents(req, res, next) {
-  db.many("SELECT id FROM Activity WHERE Attendees < 2", req.params)
+  db.many("SELECT location, createdAt, Person.firstName, Person.lastName FROM Activity, Person WHERE Attendees < 2 AND Person.ID = creatorID", req.params)
     .then((data) => {
       returnDataOr404(res, data);
     })
@@ -363,7 +364,7 @@ function readEvents(req, res, next) {
 // Create Event
 function createEvent(req, res, next) {
   db.one(
-    "INSERT INTO Activity(long, lat) VALUES (${long}, ${lat}) RETURNING id",
+    "INSERT INTO Activity(location, creatorID) VALUES (${location}, {creatorID}) RETURNING id",
     req.body
   )
     .then((data) => {
@@ -400,4 +401,15 @@ function joinEvent(req, res, next) {
     .catch((err) => {
       next(err);
     });
+}
+
+// Delete event
+function deleteEvent(req, res, next) {
+  db.oneOrNone('DELETE FROM Activity, DogActivity WHERE id=${id} AND activityID=${id} RETURNING id', req.params)
+      .then(data => {
+          returnDataOr404(res, data);
+      })
+      .catch(err => {
+          next(err);
+      });
 }
