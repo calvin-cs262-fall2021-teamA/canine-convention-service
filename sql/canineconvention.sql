@@ -28,8 +28,9 @@ CREATE TABLE Dog (
 
 CREATE TABLE Activity (
 	ID SERIAL PRIMARY KEY,
-	location varchar(50) NOT NULL,
-	EventTime timestamp with time zone,
+	creatorID integer REFERENCES Person(ID),
+	location point,
+	createdAt TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
 	Age integer,
 	Personality varchar(50),
 	Gender varchar(50),
