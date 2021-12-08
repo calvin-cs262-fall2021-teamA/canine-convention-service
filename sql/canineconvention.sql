@@ -11,7 +11,8 @@ CREATE TABLE Person (
 	lastName varchar(50), 
 	email varchar(50) NOT NULL,
 	phone varchar(50) NOT NULL,
-	image varchar(250)
+	image varchar(250),
+	password varchar(250)
 	);
 
 CREATE TABLE Dog (
@@ -35,7 +36,6 @@ CREATE TABLE Activity (
 	Personality varchar(50),
 	Gender varchar(50),
 	Neutered boolean,
-	Attendees integer DEFAULT 1 NOT NULL
 	);
 
 CREATE TABLE DogActivity (
