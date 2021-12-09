@@ -135,7 +135,7 @@ function readPerson(req, res, next) {
 
 //Read individual login info
 function login(req, res, next) {
-  db.oneOrNone("SELECT ID FROM Person WHERE email=${email}", req.params)
+  db.oneOrNone("SELECT * FROM Person WHERE email=${email}", req.params)
     .then((data) => {
       returnDataOr404(res, data);
     })
