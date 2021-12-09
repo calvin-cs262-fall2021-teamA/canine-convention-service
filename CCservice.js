@@ -352,7 +352,7 @@ function updateDogSize(req, res, next) {
 
 // Find Events
 function readEvents(req, res, next) {
-  db.many("SELECT location, createdAt, Person.firstName, Person.lastName FROM Activity, Person WHERE Attendees < 2 AND Person.ID = creatorID", req.params)
+  db.many("SELECT Activity.id, location, creatorID, createdAt, Person.firstName, Person.lastName FROM Activity, Person WHERE Person.ID = creatorID AND (SELECT COUNT(*) FROM DogActivity, Activity WHERE EventID = Activity.ID) <= 2", req.params)
     .then((data) => {
       returnDataOr404(res, data);
     })
@@ -364,7 +364,7 @@ function readEvents(req, res, next) {
 // Create Event
 function createEvent(req, res, next) {
   db.one(
-    "INSERT INTO Activity(location, creatorID) VALUES (${location}, {creatorID}) RETURNING id",
+    "INSERT INTO Activity(location, creatorID) VALUES (${location}, ${creatorID}) RETURNING id",
     req.body
   )
     .then((data) => {
@@ -375,24 +375,10 @@ function createEvent(req, res, next) {
     });
 }
 
-// Update Event
-function updateEvent(req, res, next) {
-  db.oneOrNone(
-    "UPDATE Activity SET Attendees = Attendees + 1 WHERE id=${params.id} RETURNING id",
-    req
-  )
-    .then((data) => {
-      returnDataOr404(res, data);
-    })
-    .catch((err) => {
-      next(err);
-    });
-}
-
 // Join Event
 function joinEvent(req, res, next) {
   db.oneOrNone(
-    "INSERT INTO DogActivity VALUES (${dogID}, ${activityID} ) RETURNING id",
+    "INSERT INTO DogActivity VALUES (${dogID}, ${activityID} ) RETURNING eventID",
     req.body
   )
     .then((data) => {
