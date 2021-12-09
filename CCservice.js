@@ -69,7 +69,6 @@ router.put("/dog/size/:id", updateDogSize);
 // Event finding routes
 router.post("/event", createEvent);
 router.get("/events", readEvents);
-router.put("/event/:id", updateEvent);
 router.post("/event/join/:id", joinEvent);
 router.delete("/event/:id", deleteEvent);
 
