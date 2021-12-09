@@ -55,6 +55,7 @@ router.put("/persons/surname/:id", updatePersonLastName);
 router.put("/persons/email/:id", updatePersonEmail);
 router.put("/persons/phone/:id", updatePersonPhone);
 router.put("/persons/image/:id", updatePersonImage);
+router.get("/login/:email", login);
 router.get("/dog/:id", readDog);
 router.post("/dog", createDog);
 router.delete("/dog/:id", deleteDog);
@@ -72,7 +73,6 @@ router.get("/events", readEvents);
 router.put("/event/:id", updateEvent);
 router.post("/event/join/:id", joinEvent);
 router.delete("/event/:id", deleteEvent);
-
 
 app.use(router);
 app.use(errorHandler);
@@ -126,6 +126,17 @@ function createPerson(req, res, next) {
 // Read individual person info
 function readPerson(req, res, next) {
   db.oneOrNone("SELECT * FROM Person WHERE id=${id}", req.params)
+    .then((data) => {
+      returnDataOr404(res, data);
+    })
+    .catch((err) => {
+      next(err);
+    });
+}
+
+//Read individual login info
+function login(req, res, next) {
+  db.oneOrNone("SELECT id FROM Person WHERE email=${email}", req.params)
     .then((data) => {
       returnDataOr404(res, data);
     })
@@ -334,7 +345,6 @@ function updateDogImage(req, res, next) {
       next(err);
     });
 }
-
 
 // Update dog size
 function updateDogSize(req, res, next) {
