@@ -72,6 +72,7 @@ router.post("/event", createEvent);
 router.get("/events", readEvents);
 router.post("/event/join/:id", joinEvent);
 router.delete("/event/:id", deleteEvent);
+router.get("/events/:id", readPersonsEvents);
 
 app.use(router);
 app.use(errorHandler);
@@ -407,4 +408,16 @@ function deleteEvent(req, res, next) {
       .catch(err => {
           next(err);
       });
+}
+
+// Read dog ids that a person has matched with, ordered by date
+function readPersonsEvents(req, res, next) {
+  db.many("SELECT dogID FROM Dog, Activity, DogActivity AS Dog1, DogActivity AS Dog2, Activity WHERE personID=${id} \
+          AND Dog1.dogID=Dog.ID AND Dog2.eventID=Dog1.eventID ORDER BY createdAt ASC", req.params)
+    .then((data) => {
+      returnDataOr404(res, data);
+    })
+    .catch((err) => {
+      next(err);
+    });
 }
