@@ -352,7 +352,7 @@ function updateDogSize(req, res, next) {
 
 // Find Events
 function readEvents(req, res, next) {
-  db.many("SELECT Activity.id, location, createdAt, Person.firstName, Person.lastName FROM Activity, Person WHERE Person.ID = creatorID AND (SELECT COUNT(*) FROM DogActivity, Activity WHERE EventID = Activity.ID) <= 2", req.params)
+  db.many("SELECT Activity.id, location, creatorID, createdAt, Person.firstName, Person.lastName FROM Activity, Person WHERE Person.ID = creatorID AND (SELECT COUNT(*) FROM DogActivity, Activity WHERE EventID = Activity.ID) <= 2", req.params)
     .then((data) => {
       returnDataOr404(res, data);
     })
