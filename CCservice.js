@@ -56,7 +56,7 @@ router.put("/persons/email/:id", updatePersonEmail);
 router.put("/persons/phone/:id", updatePersonPhone);
 router.put("/persons/image/:id", updatePersonImage);
 router.get("/dog/:id", readDog);
-router.get("login/:email", login);
+router.get("/login/:email", login);
 router.post("/dog", createDog);
 router.delete("/dog/:id", deleteDog);
 router.put("/dog/name/:id", updateDogName);
