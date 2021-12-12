@@ -70,6 +70,7 @@ router.put("/dog/size/:id", updateDogSize);
 // Event finding routes
 router.post("/event", createEvent);
 router.get("/events", readEvents);
+router.get("/dogevents", readDogEvents);
 router.post("/event/join/:id", joinEvent);
 router.delete("/event/:id", deleteEvent);
 router.get("/events/:id", readPersonsEvents);
@@ -408,6 +409,16 @@ function deleteEvent(req, res, next) {
       .catch(err => {
           next(err);
       });
+}
+
+function readDogEvents(req, res, next) {
+    db.many("SELECT * FROM DogActivity")
+        .then(data => {
+            res.send(data);
+        })
+        .catch(err => {
+            next(err);
+        })
 }
 
 // Read dog ids that a person has matched with, ordered by date
